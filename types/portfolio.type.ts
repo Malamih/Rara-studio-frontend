@@ -36,6 +36,7 @@ export interface Portfolio {
     createdAt: Date;
     updatedAt: Date;
   }[];
+  isSelected: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -77,3 +77,30 @@ export const useDeletePortfolio = () => {
     },
   });
 };
+
+export const useTogglePortfolioSelection = (id: string) => {
+  const queryClient = useQueryClient();
+  const endpoint = new ApiClient<null, any>(
+    `portfolios/${id}/toggle-selection`
+  );
+
+  return useMutation({
+    mutationFn: endpoint.put,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["portfolios"] });
+    },
+  });
+};
+
+export const useGetSelectedPortfolio = () => {
+  const endpoint = new ApiClient<null, GetPortfolioByIdResponse>(
+    "/portfolios/selected"
+  );
+
+  return useQuery({
+    queryKey: ["portfolio", "selected"],
+    queryFn: endpoint.get,
+    staleTime: 1000 * 60, // optional: cache for 1 minute
+    retry: false,
+  });
+};

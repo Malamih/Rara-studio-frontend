@@ -67,3 +67,19 @@ export const useDeleteEmployee = () => {
     },
   });
 };
+
+export const useReorderEmployees = () => {
+  const queryClient = useQueryClient();
+  const endpoint = new ApiClient<
+    { employee: string; order: number }[],
+    GetAllEmployeesResponse
+  >("/employees/reorder");
+
+  return useMutation({
+    mutationFn: endpoint.post,
+    onSuccess: () => {
+      // بعد إعادة الترتيب نحدث الكاش
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+  });
+};

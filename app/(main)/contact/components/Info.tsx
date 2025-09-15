@@ -29,18 +29,30 @@ export const Info = () => {
     if (data) {
       const page = data as ContactPageContent;
       const newData = [
-        {
-          icon: <Phone />,
-          value: page?.sections?.contactInformation?.phoneNumber?.value,
-        },
-        {
-          icon: <Email />,
-          value: page?.sections?.contactInformation?.email?.value,
-        },
-        {
-          icon: <Location />,
-          value: page?.sections?.contactInformation?.location?.value,
-        },
+        ...(page?.sections?.contactInformation?.phoneNumber?.value
+          ? [
+              {
+                icon: <Phone />,
+                value: page?.sections?.contactInformation?.phoneNumber?.value,
+              },
+            ]
+          : []),
+        ...(page?.sections?.contactInformation?.email?.value
+          ? [
+              {
+                icon: <Email />,
+                value: page?.sections?.contactInformation?.email?.value,
+              },
+            ]
+          : []),
+        ...(page?.sections?.contactInformation?.location
+          ? [
+              {
+                icon: <Location />,
+                value: page?.sections?.contactInformation?.location?.value,
+              },
+            ]
+          : []),
       ];
       setContactInfo(newData);
     }

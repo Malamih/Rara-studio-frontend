@@ -23,8 +23,8 @@ export const Hero = ({
               src={data?.logo}
               width={1000}
               height={1000}
-              alt="O3"
-              className="w-[90px] h-auto object-cover brightness-0"
+              alt={data?.name}
+              className="w-[90px] h-auto object-cover"
             />
           )}
         </div>

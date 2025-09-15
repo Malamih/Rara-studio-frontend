@@ -1,4 +1,3 @@
-
 import PersonVoice from "@/assets/icons/person-voice.svg";
 import Package from "@/assets/icons/package.svg";
 import Target from "@/assets/icons/target.svg";
@@ -77,7 +76,7 @@ export const Overview = ({
                         LucideIcons[
                           item.icon as keyof typeof LucideIcons
                         ] as any,
-                        { size: 48, color: "var(--primary)" }
+                        { size: 48, color: "var(--primary)", strokeWidth: 1.2 } // <-- make it thin here
                       )
                     : null}
                 </div>

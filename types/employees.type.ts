@@ -10,6 +10,7 @@ export interface Employee {
     public_id: string;
     url: string;
   };
+  order?: number;
   createdAt: Date;
   updatedAt: Date;
 }

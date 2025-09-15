@@ -11,7 +11,7 @@ export const Content = () => {
   const { data: clients } = useGetPartners({ query: {} });
   const page = data as PortfolioPageContent;
   return (
-    <section>
+    <section className="pb-24">
       <Container>
         <h1
           className="text-5xl font-bold mb-36 text-center mt-14"

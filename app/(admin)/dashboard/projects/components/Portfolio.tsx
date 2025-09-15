@@ -2,16 +2,26 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Trash } from "lucide-react";
+import { Trash, Star } from "lucide-react";
 import { Portfolio as PortfolioType } from "@/types/portfolio.type";
-import { useDeletePortfolio } from "@/services/portfolio";
+import {
+  useDeletePortfolio,
+  useTogglePortfolioSelection,
+} from "@/services/portfolio";
 import { EditPortfolioButton } from "./EditButton";
 
 export const PortfolioCard = ({ portfolio }: { portfolio: PortfolioType }) => {
-  const { mutate: deletePortfolio, isPending } = useDeletePortfolio();
+  const { mutate: deletePortfolio, isPending: isDeleting } =
+    useDeletePortfolio();
+  const { mutate: togglePortfolio, isPending: isToggling } =
+    useTogglePortfolioSelection(portfolio?._id);
 
   return (
-    <div className="bg-white/5 w-[70%] min-w-xl flex-[1] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow relative flex flex-col">
+    <div
+      className={`bg-white/5 w-full min-w-xl rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow relative flex flex-col ${
+        portfolio.isSelected ? "ring-2 ring-yellow-400" : ""
+      }`}
+    >
       {/* Banner Image */}
       {portfolio.banner?.url ? (
         <Image
@@ -30,7 +40,12 @@ export const PortfolioCard = ({ portfolio }: { portfolio: PortfolioType }) => {
       <div className="p-4 flex flex-col gap-3 flex-[1]">
         {/* Project Info */}
         <div className="flex flex-col gap-2">
-          <h2 className="font-bold text-xl">{portfolio.name}</h2>
+          <h2 className="font-bold text-xl flex items-center gap-2">
+            {portfolio.name}
+            {portfolio.isSelected && (
+              <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+            )}
+          </h2>
           {portfolio.projectDate && (
             <span className="text-sm text-gray-400">
               Project Date:{" "}
@@ -84,13 +99,35 @@ export const PortfolioCard = ({ portfolio }: { portfolio: PortfolioType }) => {
 
           {/* Actions */}
           <div className="flex gap-2">
+            {/* Toggle Button */}
+            <Button
+              variant={portfolio.isSelected ? "default" : "outline"}
+              size="sm"
+              className={`h-8 px-2 ${
+                portfolio.isSelected
+                  ? "bg-yellow-400 hover:bg-yellow-500 text-black"
+                  : "text-gray-500 hover:text-yellow-500"
+              }`}
+              onClick={() => togglePortfolio(null)}
+              disabled={isToggling}
+            >
+              <Star
+                className={`w-4 h-4 ${
+                  portfolio.isSelected ? "fill-current" : ""
+                }`}
+              />
+            </Button>
+
+            {/* Edit Button */}
             <EditPortfolioButton portfolio={portfolio} />
+
+            {/* Delete Button */}
             <Button
               variant="ghost"
               size="sm"
               className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
               onClick={() => deletePortfolio(portfolio._id)}
-              disabled={isPending}
+              disabled={isDeleting}
             >
               <Trash className="w-4 h-4" />
             </Button>

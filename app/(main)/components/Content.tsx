@@ -13,13 +13,32 @@ import { useGetPageContents } from "@/services/pages";
 import { HomePageContent } from "@/types/pages";
 import { useGetPartners } from "@/services/partners";
 import { Partner } from "@/types/partners";
+import { Loader } from "@/components/Loader";
+import clsx from "clsx";
+import { useEffect, useState } from "react";
+import ScrollTrigger from "gsap-trial/ScrollTrigger";
 
 export const Content = () => {
-  const { data } = useGetPageContents("home");
+  const [hideLoader, setHideLoader] = useState(false);
+  const { data, isFetched } = useGetPageContents("home");
   const { data: clients } = useGetPartners({ query: {} });
   const page = data as HomePageContent;
+
+  useEffect(() => {
+    if (isFetched) {
+      setTimeout(() => {
+        setHideLoader(true);
+        ScrollTrigger?.refresh();
+      }, 100);
+    }
+  }, [isFetched]);
   return (
     <main>
+      <Loader
+        className={clsx({
+          "opacity-0": hideLoader,
+        })}
+      />
       <Hero data={page?.sections?.hero} />
       <About data={page?.sections?.about} />
       <Counters data={page?.sections?.overview} />

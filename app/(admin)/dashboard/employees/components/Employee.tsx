@@ -2,13 +2,15 @@
 
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Trash, GripVertical } from "lucide-react";
 import Image from "next/image";
 import { Employee as EmployeeType } from "@/types/employees.type";
 import { EditEmployeeButton } from "./EditButton";
 import { useDeleteEmployee } from "@/services/employees";
 import { queryClient } from "@/providers/queryProvider";
 import { useState } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export const Employee = ({
   emp,
@@ -19,6 +21,15 @@ export const Employee = ({
 }) => {
   const { mutateAsync, isPending } = useDeleteEmployee();
   const [loading, setLoading] = useState(false);
+
+  // DND setup
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: emp._id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const handleDelete = async () => {
     try {
@@ -33,8 +44,20 @@ export const Employee = ({
   };
 
   return (
-    <TableRow>
-      <TableCell>{index + 1}</TableCell>
+    <TableRow ref={setNodeRef} style={style}>
+      {/* Sort handle */}
+      <TableCell>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="cursor-grab active:cursor-grabbing"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical size={16} />
+        </Button>
+      </TableCell>
+
       <TableCell>
         <div className="flex items-center gap-2">
           {emp.image?.url && (
@@ -54,7 +77,6 @@ export const Employee = ({
       <TableCell>{emp.position}</TableCell>
       <TableCell>{emp.caption}</TableCell>
 
-      {/* Social Links */}
       <TableCell>
         {emp.facebook ? (
           <a
@@ -97,7 +119,7 @@ export const Employee = ({
           "-"
         )}
       </TableCell>
-
+      <TableCell className="text-center">{emp?.order}</TableCell>
       {/* Actions */}
       <TableCell className="text-right">
         <div className="flex justify-end gap-2 pr-2">

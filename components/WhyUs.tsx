@@ -12,9 +12,9 @@ export const WhyUs = ({
   const firstWords = words.slice(0, -2).join(" ");
 
   return (
-    <section className="py-24 bg-white text-black">
+    <section className="py-24 pb-12 bg-white text-black">
       <Container className="max-md:text-center">
-        <h5 className="font-bold mb-8 text-5xl leading-[100%]">
+        <h5 className="font-bold mb-4 text-5xl leading-[100%]">
           {firstWords} <span className="text-primary">{lastTwoWords}</span>
         </h5>
         <div

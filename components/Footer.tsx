@@ -12,7 +12,7 @@ export const Footer = () => {
   const { data } = useGetPageContents("contact");
   const page = data as ContactPageContent;
   return (
-    <footer>
+    <footer className="z-40 relative">
       <Container className="flex py-12 gap-12 max-lg:flex-col">
         <div className="logo min-w-sm max-lg:min-w-2xs">
           <div className="logo mb-8">
