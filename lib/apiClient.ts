@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+export const BASE_URL = "https://rara-studio-api-production.up.railway.app";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
