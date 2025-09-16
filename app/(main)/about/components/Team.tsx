@@ -121,53 +121,56 @@ export const Team = () => {
             !isFetching &&
             data?.payload &&
             data?.payload?.length > 0 &&
-            data?.payload?.map((member, i) => (
-              <li className="text-center" key={i}>
-                <header className="mb-6 flex items-center justify-center">
-                  <Image
-                    src={member?.image?.url as string}
-                    width={1000}
-                    height={1000}
-                    alt={`${member.name}'s image`}
-                    className="min-w-[224px] max-w-[224px] min-h-[224px] max-h-[224px] object-cover rounded-full"
-                  />
-                </header>
-                <div className="flex flex-col gap-2">
-                  <span className="font-bold text-xl leading-5">
-                    {member.name}
-                  </span>
-                  <span className="text-sm font-medium text-primary">
-                    {member.position}
-                  </span>
-                </div>
-                <p className="font-normal text-sm text-[#787A82] mb-4">
-                  {member.caption}
-                </p>
-                <ul className="flex items-center justify-center gap-4">
-                  {member?.facebook && (
-                    <li>
-                      <Link href={member?.facebook}>
-                        <FacebookGray />
-                      </Link>
-                    </li>
-                  )}
-                  {member?.github && (
-                    <li>
-                      <Link href={member?.github}>
-                        <GithubGray />
-                      </Link>
-                    </li>
-                  )}
-                  {member?.linkedin && (
-                    <li>
-                      <Link href={member?.linkedin}>
-                        <LinkedinGray />
-                      </Link>
-                    </li>
-                  )}
-                </ul>
-              </li>
-            ))}
+            data?.payload
+              .slice()
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+              ?.map((member, i) => (
+                <li className="text-center" key={i}>
+                  <header className="mb-6 flex items-center justify-center">
+                    <Image
+                      src={member?.image?.url as string}
+                      width={1000}
+                      height={1000}
+                      alt={`${member.name}'s image`}
+                      className="min-w-[224px] max-w-[224px] min-h-[224px] max-h-[224px] object-cover rounded-full"
+                    />
+                  </header>
+                  <div className="flex flex-col gap-2">
+                    <span className="font-bold text-xl leading-5">
+                      {member?.name}
+                    </span>
+                    <span className="text-sm font-medium text-primary">
+                      {member?.position}
+                    </span>
+                  </div>
+                  <p className="font-normal text-sm text-[#787A82] mb-4">
+                    {member?.caption}
+                  </p>
+                  <ul className="flex items-center justify-center gap-4">
+                    {member?.facebook && (
+                      <li>
+                        <Link href={member?.facebook}>
+                          <FacebookGray />
+                        </Link>
+                      </li>
+                    )}
+                    {member?.github && (
+                      <li>
+                        <Link href={member?.github}>
+                          <GithubGray />
+                        </Link>
+                      </li>
+                    )}
+                    {member?.linkedin && (
+                      <li>
+                        <Link href={member?.linkedin}>
+                          <LinkedinGray />
+                        </Link>
+                      </li>
+                    )}
+                  </ul>
+                </li>
+              ))}
         </ul>
       </Container>
     </section>

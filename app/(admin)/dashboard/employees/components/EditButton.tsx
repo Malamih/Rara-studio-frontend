@@ -79,7 +79,7 @@ export const EditEmployeeButton = ({ employee }: { employee: Employee }) => {
 
           {/* Position */}
           <div className="space-y-1">
-            <Label>Position</Label>
+            <Label>Position (optional)</Label>
             <Input
               placeholder="Enter employee position"
               type="text"
@@ -96,7 +96,7 @@ export const EditEmployeeButton = ({ employee }: { employee: Employee }) => {
 
           {/* Caption */}
           <div className="space-y-1">
-            <Label>Caption</Label>
+            <Label>Caption (optional)</Label>
             <Input
               placeholder="Enter employee caption"
               type="text"

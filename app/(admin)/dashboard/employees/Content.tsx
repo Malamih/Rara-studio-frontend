@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/dashboard/Input";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useGetEmployees, useReorderEmployees } from "@/services/employees";
 import {
   Table,
@@ -26,6 +26,10 @@ import {
   verticalListSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
 import { toast } from "sonner";
 import { Employee as EmployeeType } from "@/types/employees.type";
 
@@ -40,8 +44,10 @@ export const Content = () => {
     query: { keywords: name, page },
   });
 
-  const { mutate: updateOrder, isPending: updating } = useReorderEmployees();
+  const { mutateAsync: updateOrder, isPending: updating } =
+    useReorderEmployees();
 
+  // Debounce search input
   useEffect(() => {
     const timeout = setTimeout(() => {
       setName(search);
@@ -59,6 +65,8 @@ export const Content = () => {
     setEmployees(sortedEmployees);
   }, [sortedEmployees]);
 
+  const tableRef = useRef<HTMLDivElement>(null);
+
   const sensors = useSensors(useSensor(PointerSensor));
 
   const handleDragEnd = (event: any) => {
@@ -70,10 +78,7 @@ export const Content = () => {
 
     if (oldIndex === -1 || newIndex === -1) return;
 
-    setEmployees((prev) => {
-      const next = arrayMove(prev, oldIndex, newIndex);
-      return next;
-    });
+    setEmployees((prev) => arrayMove(prev, oldIndex, newIndex));
     setCanSave(true);
   };
 
@@ -82,7 +87,9 @@ export const Content = () => {
       employee: emp._id,
       order: index + 1,
     }));
-    updateOrder(reordered);
+    updateOrder(reordered).then(() => {
+      setCanSave(false);
+    });
   };
 
   return (
@@ -111,33 +118,36 @@ export const Content = () => {
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis, restrictToParentElement]}
       >
         <SortableContext
           items={employees.map((emp) => emp._id)}
           strategy={verticalListSortingStrategy}
         >
-          <Table className="mt-5">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[60px]">Sort</TableHead>
-                <TableHead>Employee</TableHead>
-                <TableHead>Position</TableHead>
-                <TableHead>Caption</TableHead>
-                <TableHead>Facebook</TableHead>
-                <TableHead>Github</TableHead>
-                <TableHead>Linkedin</TableHead>
-                <TableHead className="w-[100px] text-center">Order</TableHead>
-                <TableHead className="text-right">
-                  <div className="pr-2">Actions</div>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {employees?.map((emp, index) => (
-                <Employee emp={emp} index={index} key={emp._id} />
-              ))}
-            </TableBody>
-          </Table>
+          <div ref={tableRef}>
+            <Table className="mt-5">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[60px]">Sort</TableHead>
+                  <TableHead>Employee</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead>Caption</TableHead>
+                  <TableHead>Facebook</TableHead>
+                  <TableHead>Github</TableHead>
+                  <TableHead>Linkedin</TableHead>
+                  <TableHead className="w-[100px] text-center">Order</TableHead>
+                  <TableHead className="text-right">
+                    <div className="pr-2">Actions</div>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {employees?.map((emp, index) => (
+                  <Employee emp={emp} index={index} key={emp._id} />
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </SortableContext>
       </DndContext>
 
