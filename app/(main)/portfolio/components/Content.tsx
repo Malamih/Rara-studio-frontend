@@ -6,12 +6,35 @@ import Link from "next/link";
 import { useGetPageContents } from "@/services/pages";
 import { PortfolioPageContent } from "@/types/pages";
 import { useGetPartners } from "@/services/partners";
+import { Loader } from "@/components/Loader";
+import clsx from "clsx";
+import { useEffect, useState } from "react";
+
 export const Content = () => {
-  const { data } = useGetPageContents("portfolio");
+  const { data, isFetched } = useGetPageContents("portfolio");
   const { data: clients } = useGetPartners({ query: {} });
   const page = data as PortfolioPageContent;
+
+  const [hideLoader, setHideLoader] = useState(false);
+
+  useEffect(() => {
+    if (isFetched) {
+      setTimeout(() => {
+        setHideLoader(true);
+      }, 100);
+    }
+  }, [isFetched]);
+
   return (
     <section className="pb-24">
+      {/* Loader */}
+      <Loader
+        className={clsx({
+          "opacity-0": hideLoader,
+          "transition-opacity duration-500": true,
+        })}
+      />
+
       <Container>
         <h1
           className="text-5xl font-bold mb-36 text-center mt-14"

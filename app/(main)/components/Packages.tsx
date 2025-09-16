@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import { HomePageContent } from "@/types/pages";
+import Link from "next/link";
 
 export const Packages = ({
   data,
@@ -49,15 +50,19 @@ export const Packages = ({
             dangerouslySetInnerHTML={{ __html: data?.subheadline?.value }}
           ></div>
           <div className="flex items-center gap-2 max-sm:flex-col">
-            <Button
-              variant={"outline"}
-              className="bg-white text-black px-10 max-sm:w-full"
-            >
-              Contact us
-            </Button>
-            <Button className="px-10 font-medium max-sm:w-full">
-              Our Portfolio
-            </Button>
+            <Link href={"/contact"}>
+              <Button
+                variant={"outline"}
+                className="bg-white text-black px-10 max-sm:w-full"
+              >
+                Contact us
+              </Button>
+            </Link>
+            <Link href={"/portfolio"}>
+              <Button className="px-10 font-medium max-sm:w-full">
+                Our Portfolio
+              </Button>
+            </Link>
           </div>
         </div>
 

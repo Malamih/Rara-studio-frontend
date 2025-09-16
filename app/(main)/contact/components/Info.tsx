@@ -6,11 +6,14 @@ import Location from "@/assets/icons/location.svg";
 import { useGetPageContents } from "@/services/pages";
 import { ContactPageContent } from "@/types/pages";
 import { useEffect, useState } from "react";
+import { Loader } from "@/components/Loader";
+import clsx from "clsx";
 
 export const Info = () => {
-  const { data } = useGetPageContents("contact");
+  const { data, isFetched } = useGetPageContents("contact");
   const page = data as ContactPageContent;
 
+  const [hideLoader, setHideLoader] = useState(false);
   const [contactinfo, setContactInfo] = useState([
     {
       icon: <Phone />,
@@ -25,9 +28,18 @@ export const Info = () => {
       value: "132 Dartmouth Street Boston, Massachusetts 02156 United States",
     },
   ]);
+
   useEffect(() => {
-    if (data) {
-      const page = data as ContactPageContent;
+    if (isFetched) {
+      // simulate loader fade
+      setTimeout(() => {
+        setHideLoader(true);
+      }, 100);
+    }
+  }, [isFetched]);
+
+  useEffect(() => {
+    if (page) {
       const newData = [
         ...(page?.sections?.contactInformation?.phoneNumber?.value
           ? [
@@ -45,7 +57,7 @@ export const Info = () => {
               },
             ]
           : []),
-        ...(page?.sections?.contactInformation?.location
+        ...(page?.sections?.contactInformation?.location?.value
           ? [
               {
                 icon: <Location />,
@@ -56,9 +68,15 @@ export const Info = () => {
       ];
       setContactInfo(newData);
     }
-  }, [data]);
+  }, [page]);
   return (
     <div className="info overflow-hidden relative p-10 bg-[#A61B3B] rounded-xl w-xl max-lg:w-full">
+      <Loader
+        className={clsx({
+          "opacity-0": hideLoader,
+          "transition-opacity duration-500": true, // smooth fade
+        })}
+      />
       <div className="title mb-28">
         <h1 className="font-semibold text-3xl leading-[100%] mb-1.5">
           {page?.sections?.contactInformation?.headline?.value}

@@ -47,7 +47,7 @@ export const Hero = ({
     }
   }, [data]);
   return (
-    <section className="h-[calc(100vh-var(--header-height))] pb-12">
+    <section className="h-[calc(100vh-var(--header-height))] pb-12 relative">
       <Placeholder src="/home/hero.jpg" />
       <Container className="z-10 relative flex flex-col h-full justify-between">
         <header>
